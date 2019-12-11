@@ -4,15 +4,47 @@ href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css"
 integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu"
  crossorigin="anonymous">
 
+ <div class="container">
+
+    <div class="container">
+      <label>Add the new Speciality : </label>
+        <form [formGroup]="SpecilalityGroup" (ngSubmit)="saveSpeciality()" #formtwo="ngForm" >
+            <mat-form-field appearance="outline">
+                <mat-label>Specilality</mat-label>
+                <input matInput placeholder="Enter the new Specilality" formControlName="specaility" >
+              </mat-form-field>
+              <button type="submit" mat-button color="primary">Submit</button>
+        </form>
+    </div>
+                
+                
+    <div class="container">
+    
+        <table class="table table-striped spcl">
+            <thead>
+              <tr>                  
+                <th>Speciality</th>
+              </tr>
+            </thead>
+            <tbody>
+    
+                <tr *ngFor="let sp of specials | async">
+                    <td>{{sp.speciality_name}}</td>
+                    
+                </tr>
+              
+            </tbody>
+          </table>
+    </div>
+
+ </div>
+ 
+
+                  
+      
 
 <!-- FIRST FROM-->
-    <form [formGroup]="SpecilalityGroup" (ngSubmit)="saveSpeciality()" #formtwo="ngForm" >
-        <mat-form-field appearance="outline">
-            <mat-label>Specilality</mat-label>
-            <input matInput placeholder="Enter the new Specilality" formControlName="specaility" >
-          </mat-form-field>
-          <button type="submit" mat-button color="primary">Submit</button>
-    </form>
+    
   
 
  

@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder,FormGroup, FormControl,Validators} from '@angular/forms';
+import { FormBuilder, FormGroup, FormControl, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Patientregistration } from '../model/patientregistration';
 import { PatientregistrationserviceService } from '../service/patientregistrationservice.service';
 import { OtpserviceService } from '../service/otpservice.service';
 import { SharedService } from '../shared.service';
+import { finalize } from 'rxjs/internal/operators/finalize';
 @Component({
   selector: 'app-registration',
   templateUrl: './registration.component.html',
@@ -14,17 +15,18 @@ export class RegistrationComponent implements OnInit {
 
   registerForm: FormGroup;
   submitted = false;
-  
-  constructor( private router:Router,private userService:PatientregistrationserviceService ,private sharedService: SharedService,private otpservice:OtpserviceService ) {
+  patientemail = new Patientregistration();
+
+  constructor(private router: Router, private userService: PatientregistrationserviceService, private sharedService: SharedService, private otpservice: OtpserviceService) {
     //this.user = new Patientregistration();
     this.registerForm = new FormGroup({
       firstName: new FormControl(''),
       middleName: new FormControl(''),
       lastName: new FormControl(''),
-      dob:new FormControl(''),
+      dob: new FormControl(''),
       age: new FormControl(''),
-     gender: new FormControl(''),
-     
+      gender: new FormControl(''),
+
       phone: new FormControl(''),
       email: new FormControl(''),
       address: new FormControl(''),
@@ -34,14 +36,14 @@ export class RegistrationComponent implements OnInit {
     });
   }
   ngOnInit() {
-    (function() {
+    (function () {
       'use strict';
-      window.addEventListener('load', function() {
+      window.addEventListener('load', function () {
         // Get the forms we want to add validation styles to
         var forms = document.getElementsByClassName('needs-validation');
         // Loop over them and prevent submission
-        var validation = Array.prototype.filter.call(forms, function(form) {
-          form.addEventListener('submit', function(event) {
+        var validation = Array.prototype.filter.call(forms, function (form) {
+          form.addEventListener('submit', function (event) {
             if (form.checkValidity() === false) {
               event.preventDefault();
               event.stopPropagation();
@@ -51,29 +53,48 @@ export class RegistrationComponent implements OnInit {
         });
       }, false);
     })();
-  
+
   }
   onSubmit() {
     this.submitted = true;
     // stop here if form is invalid
-       if (this.registerForm.invalid) {
-           return;
-       }
-       else{
-        this.sharedService.otp.email= this.sharedService.user.email
-       
-        this.otpservice.otpgenerate(this.sharedService.otp).subscribe();
-        
-        this.router.navigate(['otpform'])
-     //  this.userService.save(this.sharedService.user).subscribe();
-       }
-       console.log(this.registerForm.value);
-       console.log(this.sharedService.user.dateofbirth)
-   
-       // display form values on success
-      // alert('SUCCESS!! :-)\n\n' + JSON.stringify(this.registerForm.value, null, 4));
+    if (this.registerForm.invalid) {
+      return;
+    }
+    else {
+      this.patientemail.email = this.sharedService.user.email;
+      this.userService.findbyemail(this.patientemail).pipe(finalize(() => {
+
+        if (this.patientemail != null) {
+          alert("this email id already taken please enter different email")
+
+        }
+        else {
+          this.sharedService.otp.email = this.sharedService.user.email
+
+          this.otpservice.otpgenerate(this.sharedService.otp).subscribe();
+
+          this.router.navigate(['otpform'])
+        }
+      })).subscribe(data => { this.patientemail = data })
+
+    }
+
+
+
+
+
+
+
+    //  this.userService.save(this.sharedService.user).subscribe();
   }
+ // console.log(this.registerForm.value);
+  //console.log(this.sharedService.user.dateofbirth)
+
+  // display form values on success
+  // alert('SUCCESS!! :-)\n\n' + JSON.stringify(this.registerForm.value, null, 4));
 }
+
 
 
 

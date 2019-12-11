@@ -13,6 +13,7 @@ import { AuthGuard} from '../../auths/auth.guard'
 import { EnquiryreplayComponent } from './components/enquiryreplay/enquiryreplay.component';
 
 
+
 const routes: Routes = [
   {path:''  , component:NavComponent,
   children: [

@@ -20,6 +20,7 @@ import { AuthService } from '../auth/service/auth.service';
 import { AuthGuard } from '../../auths/auth.guard';
 import { EnquiryreplayComponent } from './components/enquiryreplay/enquiryreplay.component';
 
+
 @NgModule({
   declarations: [NavComponent,
     DoctorComponent, AdddoctorComponent, 

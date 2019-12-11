@@ -14,27 +14,35 @@ export class SpecialistComponent implements OnInit {
   SpecilalityGroup: FormGroup;
 
   specialists: Observable<Speciality[]>;
+  specials: Observable<Speciality[]>;
 
   constructor(private _formBuilder: FormBuilder 
-    , private  specialistService:SpecialityService , private router: Router ) {}
+    , private  specialistService:SpecialityService , private router: Router ) {
+      this.SpecilalityGroup = this._formBuilder.group({
+        specaility: ['', Validators.required],
+      });
+    }
 
      
   ngOnInit() { 
-    this.SpecilalityGroup = this._formBuilder.group({
-      specaility: ['', Validators.required],
-    });
-    
+    this.reloadData(); 
   }
 
+  reloadData(){
+    this.specials=this.specialistService.getSpecailityList();
+    console.log(this.specials);
+  }
+
+
   saveSpeciality(){
-    
     let specaility = this.SpecilalityGroup.controls['specaility'].value;
     let specailits = new Speciality(specaility);
     console.log(specailits);
     this.specialistService.createSpecaility(specailits).subscribe(data => console.log(data) 
     ,  error => console.log(error));
-    this.router.navigate(['/home']);
+    this.router.navigate(['/home/speciality']);
   }
 
+  
   
 }
